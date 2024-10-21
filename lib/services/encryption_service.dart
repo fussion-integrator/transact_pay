@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:pointycastle/export.dart';
-import 'package:pointycastle/pointycastle.dart';
 
 class EncryptionService {
   final String encryptionKey;

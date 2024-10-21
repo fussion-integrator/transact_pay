@@ -1,4 +1,4 @@
-# Flutter Transact Pay
+# Transact Pay
 
 [![pub package](https://img.shields.io/pub/v/flutter_zoom_drawer.svg)](https://pub.dev/packages/transact_pay) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -12,208 +12,141 @@ You also need to have `Public key` and `Encryption key`, which can be gotten fro
 
 ```yaml
 dependencies:
-  flutter_spin_wheel_menu: "<latest_release>"
+  transact_pay: "<latest_release>"
 ```
 
 ## 📌 Simple Example (Thanks to @ChidiebereEdeh)
 
 ```dart
-import 'package:transact_pay/transact_pay.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:transact_pay/transact_pay.dart';
 
-void main() async {
-  // Example API Key and Encryption Key
-  String apiKey = "PGW-PUBLICKEY-TEST-5D9411AB34kjekrjieurkjker";
-  String encryptionKey =
-      "NDA5NiE8UlNBS2V5VmFsBqYzZKcmN1eDg4bmJsd2FydbW9vM1hhaWpXd2IwbnVVOTJ4anBmSzByb0FYaFo0emdHVUdlS081emY4enlncExTYzFqS05MMFNXZHZWYndMeTN3WHJiRTBrSjZJRWVvSThLRSs0anRndzY1R084Z3hJeGpibjhNemI5YVNreFdaSnVMRFRLNzJHcGcxYkwrNDBLYnVNc2tVWlJVTGxhNC84Y1dYSlpId2JINjRWNkNHQlVMMGVQUmQ4dnB3aEhySzhZSlZaRGxuYTdNbmxQVjdoeGg1Q0dabkVsNy91WEJjaGYvTExLOFNyckdnRWN1anFKWEZxMm9nUlEwNzBxN2RmOXBNZ0Q5YXpTK3dya2dBck9wNnVFcXBFQ1NnbXlvb1VMZFV2MTBhQk4xRUN5YTY2UnhuV3dEck5QZktSWjU4ZmFlNnJkelpMaExlajNId2VJRjZYcHpwL280VTlmVDVwOFNWTStHK1FZalFFV0RieldhYzMyMUIxRVhWc2xkMXFFTDJzZEk0UEFWNy9DWUcwS2hvR256NVdyZnNBQ1lRRUFkQm16MXM1NktYZnczV3dYVDJoUE1xWWtTZ2c4ejFiR1AxWTZJeDU3RHViUjdVcDlwc2taV0ptUzdNdkM1NnRHN1F6OUdiNzBjVTRiNXYvYkdBZnNMNUlRanBrc2QyRENsU2U0Vm5oNEcyWE0xeTEzS0gyZWVvNnViMUczdVBUMGtzZ2RxSXRtdjFKcmN3SThWaXJOWG9oeW1xL2xpbWg1VUhDTWhzMUhlUTQwMXIvNWt0S200bDJISFMvdXhNcmZlUmVEVTRWMXVBZTNQRU1jUDg9PC9Nb2R1bHVzPjxFeHBvbmVudD5BUUFCPC9FeHBvbmVudD48L1JTQUtleVZhbHVlPg==";
+void main() {
+  runApp(MyApp());
+}
 
-  // Create an instance of TransactPay
-  TransactPay transactPay = TransactPay(
-    apiKey: apiKey,
-    encryptionKey: encryptionKey,
-  );
-
-  // Create an order example
-  //----------------------------------------------------------------------------
-
-  // Create an order payload
-  Map<String, dynamic> createOrderPayload = {
-    "customer": {
-      "firstname": "transact",
-      "lastname": "pay",
-      "mobile": "+2348134543421",
-      "country": "NG",
-      "email": "email@transactpay.ai"
-    },
-    "order": {
-      "amount": 100,
-      "reference": "12121212112",
-      "description": "Pay",
-      "currency": "NGN"
-    },
-    "payment": {"RedirectUrl": "https://www.hi.com"}
-  };
-
-  // Call the create order method
-  try {
-    http.Response createOrderResponse =
-    await transactPay.createOrder(createOrderPayload);
-    print('Create Order Response: ${createOrderResponse.statusCode}');
-    print('Response Body: ${createOrderResponse.body}');
-  } catch (e) {
-    print('Error creating order: $e');
-  }
-
-  // Pay with Card example
-  //----------------------------------------------------------------------------
-
-  // Pay with card payload
-  Map<String, dynamic> payWithCardPayload = {
-    "reference": "1234asd",
-    "paymentoption": "C",
-    "country": "NG",
-    "card": {
-      "cardnumber": "5123450000784608",
-      "expirymonth": "01",
-      "expiryyear": "39",
-      "cvv": "193"
-    }
-  };
-
-  // Call the paywithcard method
-  try {
-    http.Response payWithCardResponse =
-    await transactPay.payWithCard(payWithCardPayload);
-    print('Order Status Response: ${payWithCardResponse.statusCode}');
-    print('Response Body: ${payWithCardResponse.body}');
-  } catch (e) {
-    print('Error paying with card: $e');
-  }
-
-  // Order status example
-  //----------------------------------------------------------------------------
-
-  // Order status payload
-  Map<String, dynamic> orderStatusPayload = {"reference": "1234asd"};
-  // Call the order status method
-  try {
-    http.Response statusResponse =
-    await transactPay.orderStatus(orderStatusPayload);
-    print('Order Status Response: ${statusResponse.statusCode}');
-    print('Response Body: ${statusResponse.body}');
-  } catch (e) {
-    print('Error fetching order status: $e');
-  }
-
-  // Verify Order example
-  //----------------------------------------------------------------------------
-
-  // Verify order payload
-  Map<String, dynamic> verifyOrderPayload = {"reference": "1234asd"};
-  // Call the verify order method
-  try {
-    http.Response verifyOrderResponse =
-    await transactPay.verifyOrder(verifyOrderPayload);
-    print('Order Status Response: ${verifyOrderResponse.statusCode}');
-    print('Response Body: ${verifyOrderResponse.body}');
-  } catch (e) {
-    print('Error verifying order: $e');
-  }
-
-  // Save Card example
-  //----------------------------------------------------------------------------
-
-  // Save card payload
-  Map<String, dynamic> saveCardPayload = {"reference": "1234asd"};
-  // Call the save card method
-  try {
-    http.Response saveCardResponse =
-    await transactPay.saveCard(saveCardPayload);
-    print('Order Status Response: ${saveCardResponse.statusCode}');
-    print('Response Body: ${saveCardResponse.body}');
-  } catch (e) {
-    print('Error saving card: $e');
-  }
-
-  // Order fee example
-  //----------------------------------------------------------------------------
-
-  // Order fee payload
-  Map<String, dynamic> orderFeePayload = {
-    "amount": 100,
-    "currency": "USD",
-    "paymentoption": "C"
-  };
-  // Call the order fee method
-  try {
-    http.Response orderFeeResponse =
-    await transactPay.orderFee(orderFeePayload);
-    print('Order Status Response: ${orderFeeResponse.statusCode}');
-    print('Response Body: ${orderFeeResponse.body}');
-  } catch (e) {
-    print('Error fetching order fee: $e');
-  }
-
-  // Track Event example
-  //----------------------------------------------------------------------------
-
-  // Track event payload
-  Map<String, dynamic> trackEventPayload = {};
-  // Call the track event method
-  try {
-    http.Response trackEventResponse =
-    await transactPay.trackEvents(trackEventPayload);
-    print('Order Status Response: ${trackEventResponse.statusCode}');
-    print('Response Body: ${trackEventResponse.body}');
-  } catch (e) {
-    print('Error tracking event: $e');
-  }
-
-  // Banks example
-  //----------------------------------------------------------------------------
-
-  // Banks payload
-  Map<String, dynamic> banksPayload = {};
-  // Call the banks method
-  try {
-    http.Response banksResponse = await transactPay.banks();
-    print('Order Status Response: ${banksResponse.statusCode}');
-    print('Response Body: ${banksResponse.body}');
-  } catch (e) {
-    print('Error fetching banks: $e');
-  }
-
-  // Get payment link example
-  //----------------------------------------------------------------------------
-
-  // Payment link payload
-  Map<String, dynamic> paymentLinPayload = {"reference": "1234asd"};
-  // Call the payment link method
-  try {
-    http.Response paymentLinkResponse =
-    await transactPay.getPaymentLink(paymentLinPayload);
-    print('Order Status Response: ${paymentLinkResponse.statusCode}');
-    print('Response Body: ${paymentLinkResponse.body}');
-  } catch (e) {
-    print('Error fetching payment link: $e');
-  }
-
-  // Order status example
-  //----------------------------------------------------------------------------
-
-  // Payment key payload
-  Map<String, dynamic> paymentKeyPayload = {};
-  // Call the order status method
-  try {
-    http.Response paymentKeyResponse =
-    await transactPay.getPaymentKeys(paymentKeyPayload);
-    print('Order Status Response: ${paymentKeyResponse.statusCode}');
-    print('Response Body: ${paymentKeyResponse.body}');
-  } catch (e) {
-    print('Error fetching payment key: $e');
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Transact Pay API Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: HomePage(),
+    );
   }
 }
 
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  // Example API Key and Encryption Key
+  String apiKey = "PGW-PUBLICKEY-TEST-5D9411AB210740019FF1374C89.....";
+  String encryptionKey =
+      "NDA5NiE8UlDg9PC9Nb2R1bHVzPjxFeHBvbmVudD5BUUFCPC9FeHBvbmVudD48L1JTQUtleVZhbHVlPg...==";
+
+  late TransactPay transactPay;
+
+  @override
+  void initState() {
+    super.initState();
+    transactPay = TransactPay(apiKey: apiKey, encryptionKey: encryptionKey);
+  }
+
+  Future<String> fetchData(Function apiCall) async {
+    try {
+      http.Response response = await apiCall();
+      return 'Status: ${response.statusCode}\nBody: ${response.body}';
+    } catch (e) {
+      return 'Error: $e';
+    }
+  }
+
+  Future<String> createOrder() {
+    Map<String, dynamic> payload = {
+      "customer": {
+        "firstname": "transact",
+        "lastname": "pay",
+        "mobile": "+2348134543421",
+        "country": "NG",
+        "email": "email@transactpay.ai"
+      },
+      "order": {
+        "amount": 100,
+        "reference": "12121212112",
+        "description": "Pay",
+        "currency": "NGN"
+      },
+      "payment": {"RedirectUrl": "https://www.hi.com"}
+    };
+    return fetchData(() => transactPay.createOrder(payload));
+  }
+
+  Future<String> payWithCard() {
+    Map<String, dynamic> payload = {
+      "reference": "1234asd",
+      "paymentoption": "C",
+      "country": "NG",
+      "card": {
+        "cardnumber": "5123450000784608",
+        "expirymonth": "01",
+        "expiryyear": "39",
+        "cvv": "193"
+      }
+    };
+    return fetchData(() => transactPay.payWithCard(payload));
+  }
+
+  // Add more methods for other endpoints following the same pattern...
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Transact Pay API Demo'),
+      ),
+      body: ListView(
+        children: [
+          buildApiResultTile('Create Order', createOrder),
+          buildApiResultTile('Pay with Card', payWithCard),
+          // Add more API result tiles for other endpoints...
+        ],
+      ),
+    );
+  }
+
+  Widget buildApiResultTile(String title, Future<String> Function() apiCall) {
+    return FutureBuilder<String>(
+      future: apiCall(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return ListTile(
+            title: Text(title),
+            subtitle: Text('Loading...'),
+            leading: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return ListTile(
+            title: Text(title),
+            subtitle: Text('Error: ${snapshot.error}'),
+            leading: Icon(Icons.error, color: Colors.red),
+          );
+        } else {
+          return ListTile(
+            title: Text(title),
+            subtitle: Text(snapshot.data ?? 'No data'),
+            leading: Icon(Icons.check_circle, color: Colors.green),
+          );
+        }
+      },
+    );
+  }
+}
 
 ```
 
@@ -235,105 +168,35 @@ TransactPay transactPay = TransactPay(
 
 ```
 
-### 📝 Create Order
+### 📝 Simple Usage
 
 ```dart
- // Create an order example
+ // Simple order fee example
 //----------------------------------------------------------------------------
 
-// Create an order payload
-Map<String, dynamic> createOrderPayload = {
-  "customer": {
-    "firstname": "transact",
-    "lastname": "pay",
-    "mobile": "+2348134543421",
-    "country": "NG",
-    "email": "email@transactpay.ai"
-  },
-  "order": {
+// Order fee payload
+Map<String, dynamic> orderFeePayload = {
     "amount": 100,
-    "reference": "12121212112",
-    "description": "Pay",
-    "currency": "NGN"
-  },
-  "payment": {"RedirectUrl": "https://www.hi.com"}
+    "currency": "USD",
+    "paymentoption": "C"
 };
-
-// Call the create order method
+// Call the order fee method
 try {
-http.Response createOrderResponse =
-await transactPay.createOrder(createOrderPayload);
-print('Create Order Response: ${createOrderResponse.statusCode}');
-print('Response Body: ${createOrderResponse.body}');
+    http.Response orderFeeResponse =
+    await transactPay.orderFee(orderFeePayload);
+    print('Order Status Response: ${orderFeeResponse.statusCode}');
+    print('Response Body: ${orderFeeResponse.body}');
 } catch (e) {
-print('Error creating order: $e');
-}
-
-```
-
-### 📝 Pay Order
-
-```dart
- // Pay with Card example
-//----------------------------------------------------------------------------
-
-// Pay with card payload
-Map<String, dynamic> payWithCardPayload = {
-  "reference": "1234asd",
-  "paymentoption": "C",
-  "country": "NG",
-  "card": {
-    "cardnumber": "5123450000784608",
-    "expirymonth": "01",
-    "expiryyear": "39",
-    "cvv": "193"
-  }
-};
-
-// Call the paywithcard method
-try {
-http.Response payWithCardResponse =
-await transactPay.payWithCard(payWithCardPayload);
-print('Order Status Response: ${payWithCardResponse.statusCode}');
-print('Response Body: ${payWithCardResponse.body}');
-} catch (e) {
-print('Error paying with card: $e');
-}
-
-```
-
-### 📝 Order Status
-
-```dart
- // Order status example
-//----------------------------------------------------------------------------
-
-// Order status payload
-Map<String, dynamic> orderStatusPayload = {"reference": "1234asd"};
-// Call the order status method
-try {
-http.Response statusResponse =
-await transactPay.orderStatus(orderStatusPayload);
-print('Order Status Response: ${statusResponse.statusCode}');
-print('Response Body: ${statusResponse.body}');
-} catch (e) {
-print('Error fetching order status: $e');
+    print('Error fetching order fee: $e');
 }
 
 ```
 
 ### Other example can be found in the example tab
 
-## Screens
-
-![Example app Image](https://drive.google.com/file/d/1JYM_rl9qmK_cuHMb8-ZKZy_Bm2egUjSm/view)
-
-![Example app Demo](https://drive.google.com/file/d/1JZZJm-0KnGwxNWMdcm-gAn_irP_7piDQ/view)
-
-
 ## Issues
 
-Please file any issues, bugs or feature request as an issue on our [GitHub](https://github.com/medyas/flutter_spin_wheel_menu/issues) page.
+Please file any issues, bugs or feature request as an issue on our [GitHub](https://github.com/medyas/transact_pay/issues) page.
 
 ## Want to contribute
 
@@ -342,4 +205,4 @@ If you would like to contribute to the plugin (e.g. by improving the documentati
 ## Credits
 
 Credits goes to [ChidiebereEdeh](https://github.com/fussion-integrator) as most of this package comes from his implementation.
-# transact_pay
+

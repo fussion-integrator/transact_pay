@@ -1,64 +1,57 @@
+import 'package:example/rsa_helper.dart';
 import 'package:test/test.dart';
-import 'package:example/rsa_helper.dart'; // Adjust the import path as necessary
-import 'package:pointycastle/asymmetric/api.dart';
+import 'dart:typed_data';
 
 void main() {
-  group('RSAPublicKey Parsing Tests', () {
-    test('Valid public key format', () {
-      String validPublicKey = '''
-        -----BEGIN PUBLIC KEY-----
-        NDA5NiE8UlNBS2V5VmFsdWU+PE1vZHVsdXM+eVl3d21ERGJFVXY4TkNwb2Jnd2lYaWtyekk5Q2dibkwxTFpVZDhGK0VCTmtoRXVzdWI5bCszY0FETFBoQkFpV0RyWElsZnBDMDVtUHZaTjF0WWgwUW9NQzhIczJ5bU5GeG9pbXhjWEN5ZS9uWUpTQTgydjlkbG9RMG92YWVKcG13YUFDTkd5T3JUb3lpRkMzVkgxZ0NqOXZ0Zm9PSFFTbU5ETHZGM3ZPZlZuMjFNRnJyUEtVbEdBYXFGOEJWa1RRYnJVbStMekRLaUMvcDdwb21lQjhKSllWMUs1bUZpd09zeHZ3ak5CVkJwM2FoS2MwdG5jZE1iRmNwSHZHb3hnTlA1NDlKSkVqb2hxVjkzbThTbHdLeVVKbkxaRmEveWdEYWtMbElGMUhzZm9ydWdGQ2wwY3JBb2RMaSs5VWFnR2t4N0IxMGpPWXVkNUNabnh4aEJpTU1sZzFId0RDR2thU25NalJHWnpKZzdxTHBBTDkwaUhtZ2p6dXVLeTRZZjAwZHpnTjZsUGVFdTZHT295bVNwV0szQ3hzS1dvN0ZaeVNQdUlMNDJRVzFTcjNtUk43ZGtrblFCdUNjb0VJSWFpSXMxV3g2OE90SmVudEhZa2FxekljMGh3eEFCNUwwdHFmVE1MUHhwV2w1U1B0TktJcDBWTjJJbVZSdXJPcE9VRVpTVHZ3SWdvTG5ydjl6SnpRUFNNbXVmbmV6dVlYSVZ0QW15d3hHcndjSEVoRWd4S0ZHZFNzWmJkVzl3ai9JbGxmUnAzQmdIVUhBZGIvSmhVZjZnb1Q0UFNDSnQ1RzJmS0JZdmlNblFNNXR4a1hNTkVmQjg1b05CTjlrUU11Vzh4MVQxNEtVbk9iaGh2ei9aVUoxMm9qY2UrZWcxOVYxTVRzUStJWG5Gd3dXMjA9PC9Nb2R1bHVzPjxFeHBvbmVudD5BUUFCPC9FeHBvbmVudD48L1JTQUtleVZhbHVlPg==
-        -----END PUBLIC KEY-----
-      ''';
+  group('Encrypt Function Tests', () {
+    test('Encryption returns valid Uint8List', () {
+      // Sample JSON data
+      String jsonData = '''{
+        "customer": {
+          "firstname": "transact",
+          "lastname": "pay",
+          "mobile": "+2348134543421",
+          "country": "NG",
+          "email": "email@transactpay.ai"
+        },
+        "order": {
+          "amount": 100,
+          "reference": "12121212112",
+          "description": "Pay",
+          "currency": "NGN"
+        },
+        "payment": {
+          "RedirectUrl": "https://www.hi.com"
+        }
+      }''';
 
-      RSAPublicKey publicKey = parseRSAPublicKey(validPublicKey);
-      expect(publicKey, isNotNull);
-      expect(publicKey.modulus, isNotNull);
-      expect(publicKey.exponent, isNotNull);
+      // Public XML key (sample)
+      String publicXml =
+          "NDA5NiE8UlNBS2V5VmFsdWU+PE1vZHVsdXM+cW5rdlhOWHRYdEF0Mi9RcDB4SzBSUXpXYTVKRWc5T0xTNFBqYzZKcmN1eDg4bmJsd2Fyd0h4dnlrUy9STk92eFltU2ZPTlEzbW9vM1hhaWpXd2IwbnVVOTJ4anBmSzByb0FYaFo0emdHVUdlS081emY4enlncExTYzFqS05MMFNXZHZWYndMeTN3WHJiRTBrSjZJRWVvSThLRSs0anRndzY1R084Z3hJeGpibjhNemI5YVNreFdaSnVMRFRLNzJHcGcxYkwrNDBLYnVNc2tVWlJVTGxhNC84Y1dYSlpId2JINjRWNkNHQlVMMGVQUmQ4dnB3aEhySzhZSlZaRGxuYTdNbmxQVjdoeGg1Q0dabkVsNy91WEJjaGYvTExLOFNyckdnRWN1anFKWEZxMm9nUlEwNzBxN2RmOXBNZ0Q5YXpTK3dya2dBck9wNnVFcXBFQ1NnbXlvb1VMZFV2MTBhQk4xRUN5YTY2UnhuV3dEck5QZktSWjU4ZmFlNnJkelpMaExlajNId2VJRjZYcHpwL280VTlmVDVwOFNWTStHK1FZalFFV0RieldhYzMyMUIxRVhWc2xkMXFFTDJzZEk0UEFWNy9DWUcwS2hvR256NVdyZnNBQ1lRRUFkQm16MXM1NktYZnczV3dYVDJoUE1xWWtTZ2c4ejFiR1AxWTZJeDU3RHViUjdVcDlwc2taV0ptUzdNdkM1NnRHN1F6OUdiNzBjVTRiNXYvYkdBZnNMNUlRanBrc2QyRENsU2U0Vm5oNEcyWE0xeTEzS0gyZWVvNnViMUczdVBUMGtzZ2RxSXRtdjFKcmN3SThWaXJOWG9oeW1xL2xpbWg1VUhDTWhzMUhlUTQwMXIvNWt0S200bDJISFMvdXhNcmZlUmVEVTRWMXVBZTNQRU1jUDg9PC9Nb2R1bHVzPjxFeHBvbmVudD5BUUFCPC9FeHBvbmVudD48L1JTQUtleVZhbHVlPg==";
+
+      // Call the encryption function
+      Uint8List encryptedData = encrypt(jsonData, publicXml);
+
+      // Assert the result is a non-empty Uint8List
+      expect(encryptedData, isNotNull);
+      expect(encryptedData, isA<Uint8List>());
+      expect(encryptedData.isNotEmpty, true);
     });
 
-    test('Invalid public key format', () {
-      String invalidPublicKey = '''
-        -----BEGIN PUBLIC KEY-----
-        InvalidKeyData
-        -----END PUBLIC KEY-----
-      ''';
+    test('Encryption fails for invalid public XML', () {
+      // Invalid public XML
+      String invalidPublicXml = "invalid_base64_string";
 
-      expect(() => parseRSAPublicKey(invalidPublicKey),
-          throwsA(isA<FormatException>()));
-    });
+      // Sample JSON data
+      String jsonData = '''{
+        "customer": {
+          "firstname": "transact",
+          "lastname": "pay"
+        }
+      }''';
 
-    test('Public key with extra spaces', () {
-      String publicKeyWithExtraSpaces = '''
-        -----BEGIN PUBLIC KEY-----
-        
-        NDA5NiE8UlNBS2V5VmFsdWU+PE1vZHVsdXM+eVl3d21ERGJFVXY4TkNwb2Jnd2lYaWtyekk5Q2dibkwxTFpVZDhGK0VCTmtoRXVzdWI5bCszY0FETFBoQkFpV0RyWElsZnBDMDVtUHZaTjF0WWgwUW9NQzhIczJ5bU5GeG9pbXhjWEN5ZS9uWUpTQTgydjlkbG9RMG92YWVKcG13YUFDTkd5T3JUb3lpRkMzVkgxZ0NqOXZ0Zm9PSFFTbU5ETHZGM3ZPZlZuMjFNRnJyUEtVbEdBYXFGOEJWa1RRYnJVbStMekRLaUMvcDdwb21lQjhKSllWMUs1bUZpd09zeHZ3ak5CVkJwM2FoS2MwdG5jZE1iRmNwSHZHb3hnTlA1NDlKSkVqb2hxVjkzbThTbHdLeVVKbkxaRmEveWdEYWtMbElGMUhzZm9ydWdGQ2wwY3JBb2RMaSs5VWFnR2t4N0IxMGpPWXVkNUNabnh4aEJpTU1sZzFId0RDR2thU25NalJHWnpKZzdxTHBBTDkwaUhtZ2p6dXVLeTRZZjAwZHpnTjZsUGVFdTZHT295bVNwV0szQ3hzS1dvN0ZaeVNQdUlMNDJRVzFTcjNtUk43ZGtrblFCdUNjb0VJSWFpSXMxV3g2OE90SmVudEhZa2FxekljMGh3eEFCNUwwdHFmVE1MUHhwV2w1U1B0TktJcDBWTjJJbVZSdXJPcE9VRVpTVHZ3SWdvTG5ydjl6SnpRUFNNbXVmbmV6dVlYSVZ0QW15d3hHcndjSEVoRWd4S0ZHZFNzWmJkVzl3ai9JbGxmUnAzQmdIVUhBZGIvSmhVZjZnb1Q0UFNDSnQ1RzJmS0JZdmlNblFNNXR4a1hNTkVmQjg1b05CTjlrUU11Vzh4MVQxNEtVbk9iaGh2ei9aVUoxMm9qY2UrZWcxOVYxTVRzUStJWG5Gd3dXMjA9PC9Nb2R1bHVzPjxFeHBvbmVudD5BUUFCPC9FeHBvbmVudD48L1JTQUtleVZhbHVlPg==
-        
-        -----END PUBLIC KEY-----
-      ''';
-
-      RSAPublicKey publicKey = parseRSAPublicKey(publicKeyWithExtraSpaces);
-      expect(publicKey, isNotNull);
-      expect(publicKey.modulus, isNotNull);
-      expect(publicKey.exponent, isNotNull);
-    });
-
-    test('Public key without BEGIN/END markers', () {
-      String publicKeyWithoutMarkers = '''
-        NDA5NiE8UlNBS2V5VmFsdWU+PE1vZHVsdXM+eVl3d21ERGJFVXY4TkNwb2Jnd2lYaWtyekk5Q2dibkwxTFpVZDhGK0VCTmtoRXVzdWI5bCszY0FETFBoQkFpV0RyWElsZnBDMDVtUHZaTjF0WWgwUW9NQzhIczJ5bU5GeG9pbXhjWEN5ZS9uWUpTQTgydjlkbG9RMG92YWVKcG13YUFDTkd5T3JUb3lpRkMzVkgxZ0NqOXZ0Zm9PSFFTbU5ETHZGM3ZPZlZuMjFNRnJyUEtVbEdBYXFGOEJWa1RRYnJVbStMekRLaUMvcDdwb21lQjhKSllWMUs1bUZpd09zeHZ3ak5CVkJwM2FoS2MwdG5jZE1iRmNwSHZHb3hnTlA1NDlKSkVqb2hxVjkzbThTbHdLeVVKbkxaRmEveWdEYWtMbElGMUhzZm9ydWdGQ2wwY3JBb2RMaSs5VWFnR2t4N0IxMGpPWXVkNUNabnh4aEJpTU1sZzFId0RDR2thU25NalJHWnpKZzdxTHBBTDkwaUhtZ2p6dXVLeTRZZjAwZHpnTjZsUGVFdTZHT295bVNwV0szQ3hzS1dvN0ZaeVNQdUlMNDJRVzFTcjNtUk43ZGtrblFCdUNjb0VJSWFpSXMxV3g2OE90SmVudEhZa2FxekljMGh3eEFCNUwwdHFmVE1MUHhwV2w1U1B0TktJcDBWTjJJbVZSdXJPcE9VRVpTVHZ3SWdvTG5ydjl6SnpRUFNNbXVmbmV6dVlYSVZ0QW15d3hHcndjSEVoRWd4S0ZHZFNzWmJkVzl3ai9JbGxmUnAzQmdIVUhBZGIvSmhVZjZnb1Q0UFNDSnQ1RzJmS0JZdmlNblFNNXR4a1hNTkVmQjg1b05CTjlrUU11Vzh4MVQxNEtVbk9iaGh2ei9aVUoxMm9qY2UrZWcxOVYxTVRzUStJWG5Gd3dXMjA9PC9Nb2R1bHVzPjxFeHBvbmVudD5BUUFCPC9FeHBvbmVudD48L1JTQUtleVZhbHVlPg==
-      ''';
-
-      expect(() => parseRSAPublicKey(publicKeyWithoutMarkers),
-          throwsA(isA<FormatException>()));
-    });
-
-    test('Malformed public key', () {
-      String malformedPublicKey = '''
-        -----BEGIN PUBLIC KEY-----
-        -----END PUBLIC KEY-----
-      ''';
-
-      expect(() => parseRSAPublicKey(malformedPublicKey),
+      // Expect an exception to be thrown
+      expect(() => encrypt(jsonData, invalidPublicXml),
           throwsA(isA<FormatException>()));
     });
   });
