@@ -1,4 +1,7 @@
-[0.0.2] - Improve pub.dev score.
+[0.0.4] - Improve pub.dev score.
+Fixed the issue with multiple api call caused by FutureBuilder on the Example.
+
+[0.0.3] - Improve pub.dev score.
 Improved pubspec.yaml file, and ReadMe file, fixed all hint and errors.
 
 [0.0.2] - ReadMe file update.
