@@ -1,7 +1,14 @@
 // lib/transact_pay.dart
 
+import 'package:transact_pay/ui/screens/bank_transfer_screen.dart';
+import 'package:transact_pay/ui/screens/card_payment_screen.dart';
+import 'package:transact_pay/ui/screens/initiate_payment_screen.dart';
+import 'package:transact_pay/ui/screens/payment_type_screen.dart';
+import 'package:transact_pay/ui/screens/saved_card_payment_screen.dart';
+
 import 'api.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
 
 class TransactPay {
   final String apiKey;
@@ -80,5 +87,68 @@ class TransactPay {
   /// Processes a refund for an order using the provided refund details
   Future<http.Response> refundOrder(Map<String, dynamic> refundDetails) {
     return _api.refundOrder(refundDetails);
+  }
+
+  /// Navigates to the Payment Initiation Screen
+  Future<void> showPaymentInitiationScreen(
+      BuildContext context, Map<String, dynamic> paymentDetails) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PaymentInitiationScreen(),
+      ),
+    );
+  }
+
+  /// Navigates to the Card Payment Screen
+  Future<void> showCardPaymentScreen(
+      BuildContext context, Map<String, dynamic> paymentDetails) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CardPaymentScreen(
+          email: paymentDetails['email'],
+          amount: paymentDetails['amount'],
+        ),
+      ),
+    );
+  }
+
+  /// Navigates to the Bank Transfer Screen
+  Future<void> showBankTransferScreen(
+      BuildContext context, Map<String, dynamic> paymentDetails) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BankTransferScreen(
+          email: paymentDetails['email'],
+          amount: paymentDetails['amount'],
+        ),
+      ),
+    );
+  }
+
+  /// Navigates to the Payment Type Selection Screen
+  Future<void> showPaymentTypeScreen(BuildContext context) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PaymentTypeScreen(),
+      ),
+    );
+  }
+
+  /// Navigates to the Saved Card Payment Screen
+  Future<void> showSavedCardPaymentScreen(
+      BuildContext context, Map<String, dynamic> paymentDetails) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SavedCardPaymentScreen(
+          email: paymentDetails['email'],
+          amount: paymentDetails['amount'],
+        ),
+      ),
+    );
   }
 }

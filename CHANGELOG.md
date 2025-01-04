@@ -1,3 +1,6 @@
+[0.0.5] - Popup screens for payment.
+Add functions for screen popup when processing payments.
+
 [0.0.4] - Improve pub.dev score.
 Fixed the issue with multiple api call caused by FutureBuilder on the Example.
 
