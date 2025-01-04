@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<String> getBanks() {
-    Map<String, dynamic> payload = {};
+    //Map<String, dynamic> payload = {};
     return fetchData(() => transactPay.banks());
   }
 

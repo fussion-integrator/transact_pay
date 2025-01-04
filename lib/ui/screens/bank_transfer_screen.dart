@@ -9,7 +9,6 @@ import 'package:transact_pay/ui/common_widget/app_header.dart';
 import 'package:transact_pay/ui/constant/app_colors.dart';
 import 'package:transact_pay/ui/constant/app_images.dart';
 import 'package:transact_pay/ui/screens/popup_dialog/bank_transfer_progress_popup.dart';
-import 'package:transact_pay/ui/utils/page_navigator/fading_page_navigator.dart';
 
 class BankTransferScreen extends StatefulWidget {
   final String? firstName;

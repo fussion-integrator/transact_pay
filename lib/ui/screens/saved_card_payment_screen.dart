@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:transact_pay/ui/common_widget/app_bank_detail.dart';
 import 'package:transact_pay/ui/common_widget/app_button.dart';
 import 'package:transact_pay/ui/common_widget/app_card_type_selection.dart';
-import 'package:transact_pay/ui/common_widget/app_consent_checkbox.dart';
-import 'package:transact_pay/ui/common_widget/app_countdown_timer.dart';
-import 'package:transact_pay/ui/common_widget/app_field_label.dart';
 import 'package:transact_pay/ui/common_widget/app_header.dart';
-import 'package:transact_pay/ui/common_widget/app_textfield.dart';
 import 'package:transact_pay/ui/constant/app_colors.dart';
 import 'package:transact_pay/ui/constant/app_images.dart';
-import 'package:transact_pay/ui/screens/popup_dialog/bank_transfer_progress_popup.dart';
 import 'package:transact_pay/ui/screens/popup_dialog/card_payment_progress_popup.dart';
-import 'package:transact_pay/ui/utils/credit_card_formatter.dart';
 
 class SavedCardPaymentScreen extends StatefulWidget {
   final String? firstName;
@@ -35,19 +28,19 @@ class SavedCardPaymentScreen extends StatefulWidget {
 }
 
 class _SavedCardPaymentScreenState extends State<SavedCardPaymentScreen> {
-  TextEditingController _cardNumberController = TextEditingController();
-  TextEditingController _expiryDateController = TextEditingController();
-  TextEditingController _cvvController = TextEditingController();
+  // TextEditingController _cardNumberController = TextEditingController();
+  // TextEditingController _expiryDateController = TextEditingController();
+  // TextEditingController _cvvController = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
+  //final _formKey = GlobalKey<FormState>();
 
   bool isValid = false;
 
-  void _validateForm() {
-    setState(() {
-      isValid = _formKey.currentState?.validate() ?? false;
-    });
-  }
+  // void _validateForm() {
+  //   setState(() {
+  //     isValid = _formKey.currentState?.validate() ?? false;
+  //   });
+  // }
 
   // To track the selected index
   int _selectedIndex = -1;

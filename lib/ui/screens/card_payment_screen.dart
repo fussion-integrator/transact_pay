@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:transact_pay/ui/common_widget/app_bank_detail.dart';
 import 'package:transact_pay/ui/common_widget/app_button.dart';
 import 'package:transact_pay/ui/common_widget/app_consent_checkbox.dart';
-import 'package:transact_pay/ui/common_widget/app_countdown_timer.dart';
 import 'package:transact_pay/ui/common_widget/app_field_label.dart';
 import 'package:transact_pay/ui/common_widget/app_header.dart';
 import 'package:transact_pay/ui/common_widget/app_textfield.dart';
 import 'package:transact_pay/ui/constant/app_colors.dart';
 import 'package:transact_pay/ui/constant/app_images.dart';
-import 'package:transact_pay/ui/screens/popup_dialog/bank_transfer_progress_popup.dart';
 import 'package:transact_pay/ui/screens/popup_dialog/card_payment_progress_popup.dart';
 import 'package:transact_pay/ui/screens/saved_card_payment_screen.dart';
 import 'package:transact_pay/ui/utils/credit_card_formatter.dart';

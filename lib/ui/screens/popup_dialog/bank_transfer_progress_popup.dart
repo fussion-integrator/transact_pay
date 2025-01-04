@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:transact_pay/ui/common_widget/app_button.dart';
-import 'package:transact_pay/ui/common_widget/app_consent_checkbox.dart';
 import 'package:transact_pay/ui/common_widget/app_countdown_timer.dart';
 import 'package:transact_pay/ui/constant/app_colors.dart';
 import 'package:transact_pay/ui/constant/app_images.dart';

@@ -95,7 +95,7 @@ class TransactPay {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PaymentInitiationScreen(),
+        builder: (context) => const PaymentInitiationScreen(),
       ),
     );
   }
@@ -133,7 +133,7 @@ class TransactPay {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PaymentTypeScreen(),
+        builder: (context) => const PaymentTypeScreen(),
       ),
     );
   }
